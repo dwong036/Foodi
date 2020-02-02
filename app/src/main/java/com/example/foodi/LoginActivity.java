@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         usernameEditText = findViewById(R.id.usernameEditText);
@@ -55,12 +56,13 @@ public class LoginActivity extends AppCompatActivity {
         }
         if (valid1) {
             if(username.equals("hackUCI") && password.equals("2020")) {
-                startActivity(new Intent(this, Homepage.class));
+                startActivity(new Intent(this, CategoryActivity.class));
                 httpResponse.setText("Connected");
             }
             else {
                 httpResponse.setText("Try again!");
                 loginLayout.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.error_shake));
+                this.finish();
             }
         }
 
