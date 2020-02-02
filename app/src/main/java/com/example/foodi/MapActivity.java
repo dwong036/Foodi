@@ -19,7 +19,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
     BottomSheetBehavior bs;
@@ -34,6 +39,7 @@ public class MapActivity extends AppCompatActivity {
     RecyclerView fRecyclerView;
 
     FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,37 +81,31 @@ public class MapActivity extends AppCompatActivity {
 
     public void refresh(View v)
     {
-//        db.collection("detections")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-////                            for (QueryDocumentSnapshot document : task.getResult()) {
-////                            {
-//                                QueryDocumentSnapshot document = (QueryDocumentSnapshot)task.getResult().getDocuments().get(0);
-//                                Toast.makeText(MapActivity.this, document.getId() + " => " + document.getData(), Toast.LENGTH_SHORT).show();
-//
-//                        } else {
-//                            Toast.makeText(MapActivity.this, "Error getting documents.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-        DocumentReference docRef = db.collection("detections").document("ayGqwKHLJAS3xf6pJlhY");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Toast.makeText(MapActivity.this, "\"DocumentSnapshot data: \" + document.getData()", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MapActivity.this, "No such document", Toast.LENGTH_SHORT).show();
+        db.collection("detections")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                            {
+                                List<DocumentSnapshot> ls = task.getResult().getDocuments();
+                                QueryDocumentSnapshot document = (QueryDocumentSnapshot)ls.get(ls.size()-1);
+                                //Toast.makeText(MapActivity.this, document.getId() + " => " + document.getData(), Toast.LENGTH_SHORT).show();
+                                DateFormat df = new SimpleDateFormat("HH:mm");
+                                String name = document.getId();
+                                int resID = R.drawable.hack;
+                                if(name.toLowerCase().equals("banana"))
+                                    resID = R.drawable.bananas;
+                                else if(name.toLowerCase().contains("cookies"))
+                                    resID = R.drawable.cookies;
+                                fs.add(0,new Food(document.getId(),resID,df.format(new Time(System.currentTimeMillis()).getTime())));
+                                foodAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(MapActivity.this, "Error getting documents.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    Toast.makeText(MapActivity.this, "get failed with", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                });
+
     }
 }

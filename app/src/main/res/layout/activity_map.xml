@@ -106,10 +106,13 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/baseline_camera_white_48"
         app:layout_anchor="@id/recommendLinearLayout"
         android:layout_marginRight="15dp"
         app:layout_anchorGravity="top|right"
-        android:onClick="refresh"/>
+        android:backgroundTint="@android:color/black"
+        android:onClick="refresh"
+        app:fabCustomSize="50dp"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
